@@ -32,11 +32,47 @@ When /I (un)?check the following ratings: (.*)/ do |uncheck, rating_list|
     if(uncheck == nil)
       check("ratings_#{rating}")
     else
-      uncheck("ratings_#{rating}")
+      uncheck("ratings_#{rating}")      
     end
   end
 end
 
-When /^I submit the search form$/ do
+When /^I submit the ratings form$/ do
   click_button('ratings_submit')
 end
+
+Then /I should (not )?see movies with ratings:(.*)/ do |not_see, ratings| 
+  ratings = ratings.split(',')  
+  ratings.each do |rating|  
+    if (not_see == nil) 
+      page.should have_css('#movies td', :text => Regexp.new("^#{rating.strip}$"))
+    else
+      page.should_not have_css('#movies td', :text => Regexp.new("^#{rating.strip}$"))
+    end
+  end
+
+end
+
+When /^I (un)?check all ratings$/ do |uncheck|
+  debugger
+  all("#ratings_form input[type=checkbox]").each do |checkbox|
+    if(uncheck == nil) 
+      check(checkbox[:id])
+    else
+      uncheck(checkbox[:id])
+    end
+  end
+end
+
+Then /^I should not see any movie$/ do 
+  rows = all("#movies tbody tr").size()  
+  rows.should == 0 
+
+  
+end
+
+Then /^I shoud see all movies$/ do
+  rows = all("#movies tbody tr").size()  
+  rows.should == Movie.count    
+end
+

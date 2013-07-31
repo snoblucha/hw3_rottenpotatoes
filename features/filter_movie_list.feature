@@ -21,13 +21,14 @@ Background: movies have been added to database
 
   And  I am on the RottenPotatoes home page
   
-Scenario: restrict to movies with 'PG' or 'R' ratings
+Scenario: restrict to movies with 'PG' or 'R' ratings  
   When I check the following ratings: PG, R
-  And I uncheck the following ratings: PG-13, G  
-  And I submit the search form
+  And I uncheck the following ratings: PG-13, G
+  And I submit the ratings form
   Then I should be on the RottenPotatoes home page
-  And I should see movies with ratings:  PG, R  
-  And I should not see movies with ratings: G, PG-13  
+  #And show me the page
+  And I should see movies with ratings: PG, R
+  And I should not see movies with ratings: G, PG-13
 
   # enter step(s) to check the 'PG' and 'R' checkboxes
   # enter step(s) to uncheck all other checkboxes
@@ -36,7 +37,15 @@ Scenario: restrict to movies with 'PG' or 'R' ratings
   # enter step(s) to ensure that other movies are not visible
 
 Scenario: no ratings selected
-  # see assignment
+  When I uncheck all ratings
+  And I submit the ratings form
+  Then I should be on the RottenPotatoes home page
+  And I should not see any movie
+  And show me the page
 
 Scenario: all ratings selected
-  # see assignment
+  When I check all ratings
+  And I submit the ratings form
+  Then I should be on the RottenPotatoes home page
+  And I shoud see all movies
+  And show me the page
